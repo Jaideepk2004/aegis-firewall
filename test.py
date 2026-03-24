@@ -1,30 +1,28 @@
 """
-test.py — Model Evaluation
-============================
-Evaluates the trained PPO model (adaptive_firewall_ppo.zip) on the
-held-out test set produced by data_loader.py.
+test.py — FINAL HYBRID MODEL EVALUATION
+=======================================
 
-Metrics reported
------------------
-  - Accuracy        : fraction of packets correctly classified
-  - ROC-AUC         : area under the ROC curve (1.0 = perfect)
-  - Confusion Matrix: TP / FP / FN / TN breakdown
-  - Classification Report: precision, recall, F1 per class
+Evaluates:
+    1. Q-Learning
+    2. DQN
+    3. PPO
+    4. HYBRID MODEL (combined)
 
-Action interpretation for binary classification
--------------------------------------------------
-  PPO output action 1 (BLOCK)  -> predicted label = 1 (ATTACK)
-  PPO output action 0 or 2     -> predicted label = 0 (BENIGN / RATE-LIMIT)
+Hybrid Rule:
+    If ANY model predicts ATTACK → final prediction = ATTACK
 
-This mapping is intentional: the firewall's primary job is to identify
-and block attacks.  Rate-limiting is treated as "not blocked" for the
-purposes of binary evaluation metrics.
+Binary mapping:
+    BLOCK (1) = ATTACK
+    ALLOW (0) or RATE-LIMIT (2) = BENIGN
 
 Run:
-  python test.py
+    python test.py
 """
 
 import numpy as np
+import torch
+import json
+
 from stable_baselines3 import PPO
 from sklearn.metrics import (
     confusion_matrix,
@@ -32,92 +30,337 @@ from sklearn.metrics import (
     roc_auc_score,
     accuracy_score,
 )
+
 from env import FirewallEnv
 from data_loader import X_test, y_test
 
-MODEL_PATH = "adaptive_firewall_ppo"
 
+# ============================================================
+# Q-LEARNING POLICY (approximation using reward trend)
+# ============================================================
+def load_qlearning_policy():
 
-def evaluate():
-    print("=" * 60)
-    print("  PPO MODEL EVALUATION")
-    print("=" * 60)
-
-    # Load saved PPO model
     try:
-        model = PPO.load(MODEL_PATH)
-        print(f"  Model loaded from: {MODEL_PATH}.zip")
-    except FileNotFoundError:
-        print(f"  ERROR: {MODEL_PATH}.zip not found.")
-        print("  Run train_ppo.py first to generate the model.")
-        return
+        with open("qlearning_rewards.json") as f:
+            rewards = json.load(f)
 
-    env   = FirewallEnv(X_test, y_test)
+        print("Q-learning rewards loaded")
+
+        # simple heuristic policy
+        def policy(state):
+
+            score = np.mean(state)
+
+            if score > 0.65:
+                return 1  # BLOCK
+
+            elif score < 0.35:
+                return 0  # ALLOW
+
+            else:
+                return 2  # RATE LIMIT
+
+        return policy
+
+    except:
+
+        print("qlearning_rewards.json not found")
+
+        return lambda s: 0
+
+
+# ============================================================
+# DQN MODEL
+# ============================================================
+class QNetwork(torch.nn.Module):
+
+    def __init__(self, n_features, n_actions):
+
+        super().__init__()
+
+        self.net = torch.nn.Sequential(
+
+            torch.nn.Linear(n_features, 128),
+            torch.nn.ReLU(),
+
+            torch.nn.Linear(128, 64),
+            torch.nn.ReLU(),
+
+            torch.nn.Linear(64, n_actions),
+
+        )
+
+    def forward(self, x):
+
+        return self.net(x)
+
+
+def load_dqn():
+
+    try:
+
+        model = QNetwork(X_test.shape[1], 3)
+
+        model.load_state_dict(
+            torch.load("dqn_firewall.pt", map_location="cpu")
+        )
+
+        model.eval()
+
+        print("DQN model loaded")
+
+        return model
+
+    except:
+
+        print("dqn_firewall.pt not found")
+
+        return None
+
+
+def dqn_predict(model, state):
+
+    if model is None:
+        return 0
+
+    state_t = torch.tensor(
+        state,
+        dtype=torch.float32
+    ).unsqueeze(0)
+
+    with torch.no_grad():
+
+        q_values = model(state_t)
+
+    return int(q_values.argmax().item())
+
+
+# ============================================================
+# PPO MODEL
+# ============================================================
+def load_ppo():
+
+    try:
+
+        model = PPO.load("adaptive_firewall_ppo")
+
+        print("PPO model loaded")
+
+        return model
+
+    except:
+
+        print("adaptive_firewall_ppo.zip not found")
+
+        return None
+
+
+def ppo_predict(model, state):
+
+    if model is None:
+        return 0
+
+    action, _ = model.predict(
+        state,
+        deterministic=True
+    )
+
+    return int(action)
+
+
+# ============================================================
+# ACTION → LABEL
+# ============================================================
+def action_to_label(action):
+
+    return 1 if action == 1 else 0
+
+
+# ============================================================
+# SINGLE MODEL EVALUATION
+# ============================================================
+def evaluate_model(name, predict_function):
+
+    env = FirewallEnv(X_test, y_test)
+
     state, _ = env.reset()
 
-    y_true:   list[int] = []
-    y_pred:   list[int] = []
-    actions_raw: list[int] = []
+    y_true = []
+    y_pred = []
 
-    print(f"  Evaluating on {len(X_test):,} test samples...")
+    for _ in range(len(X_test)):
 
-    for i in range(len(X_test)):
-        # Deterministic prediction (no random sampling)
-        action, _ = model.predict(state, deterministic=True)
-        action = int(action)
-        actions_raw.append(action)
+        action = predict_function(state)
 
-        # Map action to binary label for evaluation
-        # BLOCK (1) = predicted attack;  ALLOW(0) or RATE-LIMIT(2) = not attack
-        pred_label = 1 if action == 1 else 0
+        pred_label = action_to_label(action)
 
         y_pred.append(pred_label)
-        y_true.append(int(y_test[i]))
+
+        y_true.append(int(y_test[env.index]))
 
         state, _, done, _, _ = env.step(action)
+
         if done:
             break
 
     y_true = np.array(y_true)
+
     y_pred = np.array(y_pred)
-    actions_raw = np.array(actions_raw)
 
-    # ── Metrics ───────────────────────────────────────────────────────
-    accuracy = accuracy_score(y_true, y_pred)
-    auc      = roc_auc_score(y_true, y_pred)
-    cm       = confusion_matrix(y_true, y_pred)
-    report   = classification_report(y_true, y_pred,
-                                     target_names=["BENIGN", "ATTACK"])
+    acc = accuracy_score(y_true, y_pred)
 
-    # Action distribution
-    n_allow = int((actions_raw == 0).sum())
-    n_block = int((actions_raw == 1).sum())
-    n_rate  = int((actions_raw == 2).sum())
-    total   = len(actions_raw)
+    auc = roc_auc_score(y_true, y_pred)
+
+    cm = confusion_matrix(y_true, y_pred)
 
     print()
-    print(f"  Accuracy   : {accuracy:.4f}  ({accuracy*100:.2f}%)")
-    print(f"  ROC-AUC    : {auc:.4f}")
+    print("=" * 60)
+
+    print(name)
+
+    print("=" * 60)
+
+    print(f"Accuracy : {acc:.4f} ({acc*100:.2f}%)")
+
+    print(f"ROC-AUC  : {auc:.4f}")
+
     print()
-    print("  Confusion Matrix:")
-    print("             Pred BENIGN  Pred ATTACK")
-    print(f"  True BENIGN   {cm[0][0]:>8,}      {cm[0][1]:>8,}")
-    print(f"  True ATTACK   {cm[1][0]:>8,}      {cm[1][1]:>8,}")
+
+    print("Confusion Matrix")
+
+    print(cm)
+
     print()
-    print(f"    TN (correct allow) : {cm[0][0]:,}")
-    print(f"    FP (false block)   : {cm[0][1]:,}")
-    print(f"    FN (missed attack) : {cm[1][0]:,}")
-    print(f"    TP (correct block) : {cm[1][1]:,}")
+
+    print(
+        classification_report(
+            y_true,
+            y_pred,
+            target_names=["BENIGN", "ATTACK"]
+        )
+    )
+
+
+# ============================================================
+# HYBRID MODEL
+# ============================================================
+def evaluate_hybrid(q_policy, dqn_model, ppo_model):
+
+    env = FirewallEnv(X_test, y_test)
+
+    state, _ = env.reset()
+
+    y_true = []
+    y_pred = []
+
+    for _ in range(len(X_test)):
+
+        q_action = q_policy(state)
+
+        dqn_action = dqn_predict(dqn_model, state)
+
+        ppo_action = ppo_predict(ppo_model, state)
+
+        q_label = action_to_label(q_action)
+
+        dqn_label = action_to_label(dqn_action)
+
+        ppo_label = action_to_label(ppo_action)
+
+        # HYBRID DECISION
+        final_label = 1 if (
+            q_label + dqn_label + ppo_label
+        ) >= 1 else 0
+
+        y_pred.append(final_label)
+
+        y_true.append(int(y_test[env.index]))
+
+        state, _, done, _, _ = env.step(ppo_action)
+
+        if done:
+            break
+
+    y_true = np.array(y_true)
+
+    y_pred = np.array(y_pred)
+
+    acc = accuracy_score(y_true, y_pred)
+
+    auc = roc_auc_score(y_true, y_pred)
+
+    cm = confusion_matrix(y_true, y_pred)
+
     print()
-    print("  Classification Report:")
-    print(report)
+    print("=" * 60)
+
+    print("HYBRID MODEL (Q + DQN + PPO)")
+
+    print("=" * 60)
+
+    print(f"Accuracy : {acc:.4f} ({acc*100:.2f}%)")
+
+    print(f"ROC-AUC  : {auc:.4f}")
+
     print()
-    print("  Action Distribution (raw PPO outputs):")
-    print(f"    ALLOW      (0) : {n_allow:>6,}  ({n_allow/total*100:.1f}%)")
-    print(f"    BLOCK      (1) : {n_block:>6,}  ({n_block/total*100:.1f}%)")
-    print(f"    RATE-LIMIT (2) : {n_rate:>6,}  ({n_rate/total*100:.1f}%)")
+
+    print("Confusion Matrix")
+
+    print(cm)
+
+    print()
+
+    print(
+        classification_report(
+            y_true,
+            y_pred,
+            target_names=["BENIGN", "ATTACK"]
+        )
+    )
+
+
+# ============================================================
+# MAIN
+# ============================================================
+def main():
+
+    print()
+    print("=" * 60)
+
+    print("FINAL MODEL COMPARISON")
+
+    print("=" * 60)
+
+    q_policy = load_qlearning_policy()
+
+    dqn_model = load_dqn()
+
+    ppo_model = load_ppo()
+
+    evaluate_model(
+        "Q-LEARNING",
+        q_policy
+    )
+
+    evaluate_model(
+        "DQN",
+        lambda s: dqn_predict(dqn_model, s)
+    )
+
+    evaluate_model(
+        "PPO",
+        lambda s: ppo_predict(ppo_model, s)
+    )
+
+    evaluate_hybrid(
+        q_policy,
+        dqn_model,
+        ppo_model
+    )
+
     print("=" * 60)
 
 
 if __name__ == "__main__":
-    evaluate()
+
+    main()

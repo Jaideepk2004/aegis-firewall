@@ -24,11 +24,12 @@ import numpy as np
 import json
 from env import FirewallEnv
 from data_loader import X_train, y_train
+import pickle
 
 # ══════════════════════════════════════════════════════════════════════
 # HYPER-PARAMETERS
 # ══════════════════════════════════════════════════════════════════════
-EPISODES        = 1
+EPISODES        = 10
 LEARNING_RATE   = 0.10
 DISCOUNT_FACTOR = 0.90
 EPSILON_START   = 1.00
@@ -136,6 +137,9 @@ def train():
     print("  NEXT STEP:")
     print("  python dqn.py    <- Step 3: Deep Q-Network (neural net RL)")
     print("=" * 60)
+
+    with open("q_table.pkl", "wb") as f:
+        pickle.dump(q_table, f)
 
     return rewards_log
 

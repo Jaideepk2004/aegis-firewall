@@ -17,6 +17,8 @@ werkzeug>=3.0.0
 # Utilities
 pyarrow>=14.0.0           # fast parquet/arrow support for HF datasets
 
+#Add gunicorn to requirements.txt
+gunicorn>=21.2.0
 
 #step to execute the project :--
 
