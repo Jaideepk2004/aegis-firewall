@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Adaptive Firewall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Neue+Montreal:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+
+<!-- ██ PRELOADER ██████████████████████████████████████████ -->
+<div id="pl">
+  <div class="pl-logo"><img src="/static/final_logo.png" alt="AI Adaptive Firewall"></div>
+  <div class="pl-wrap">
+    <div class="pl-row"><span>[ Loading... ]</span><span>[ <span id="plp">0</span>% ]</span></div>
+    <div class="pl-track"><div class="pl-fill" id="plf"></div></div>
+  </div>
+</div>
+
+<!-- Fixed BG Canvas (stars) -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- HEADER -->
+<header>
+  <a href="/" class="logo">
+    <img src="/static/final_logo.png" alt="AI Adaptive Firewall">
+  </a>
+  <a href="#contact" class="btn-contact">
+    <span>Get Started</span>
+    <span class="arrow-circle">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+  </a>
+</header>
+
+<!-- MAIN -->
+<main>
+
+<!-- ── SECTION 1: HERO ── -->
+<section id="section-hero">
+  <div class="hero-sticky">
+    <canvas id="hero-canvas"></canvas>
+
+    <div class="hero-text-left" id="hero-left">
+      <div class="hero-cyber-label">[ <span>reinforcement learning</span> ]</div>
+      <h1 class="title-1">Defending<br>the Network</h1>
+    </div>
+
+    <div class="hero-text-right" id="hero-right">
+      <p>An AI-powered adaptive firewall trained<br>with reinforcement learning to detect<br>and block intrusions in real time.</p>
+      <h1 class="title-1">on<br>the Guard<span class="hero-dot">.</span></h1>
+    </div>
+
+    <div class="scroll-cta">
+       <svg class="shield-icon" viewBox="0 0 29 38" fill="none">
+      <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+    </svg>
+      Scroll <i>to explore</i>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 2: SERVICES ── -->
+<section id="section-services">
+  <img src="/static/img/img-11.png" class="services-grad" alt="">
+  <h6 class="title-6 fade-up">[ services ]</h6>
+  <h2 class="title-2 fade-up">Three RL algorithms, one adaptive
+    <svg class="shield-icon" viewBox="0 0 29 38" fill="none">
+      <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+    </svg>
+    firewall
+  </h2>
+
+  <div class="services-grid fade-up">
+    <a class="service-card" href="#">
+      <div class="service-card-top">
+        <span class="service-num">[ 1.0 ]</span>
+        <span class="arrow-btn-white arrow-btn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <h3>Q-Learning<br>Algorithm</h3>
+      <p>Tabular reinforcement learning using a Q-table and Bellman updates. The foundation of the AI Adaptive Firewall — epsilon-greedy exploration teaches the agent to ALLOW or BLOCK packets step by step.</p>
+    </a>
+    <a class="service-card featured" href="#" style="position:relative">
+      <canvas class="service-card-canvas" id="card-canvas-2"></canvas>
+      <div class="service-card-top" style="position:relative;z-index:2">
+        <span class="service-num">[ 2.0 ]</span>
+        <span class="arrow-btn-white arrow-btn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <div style="position:relative;z-index:2">
+        <h3>Deep Q-Network (DQN)</h3>
+        <p>A neural network replaces the Q-table — 8 inputs → 128 → 64 → 3 actions. Experience replay and a frozen target network make training stable on continuous network-flow features.</p>
+      </div>
+    </a>
+    <a class="service-card" href="#">
+      <div class="service-card-top">
+        <span class="service-num">[ 3.0 ]</span>
+        <span class="arrow-btn-white arrow-btn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <h3>PPO Policy<br>Gradient</h3>
+      <p>Proximal Policy Optimization directly learns action probabilities π(a|s). Clipped updates prevent unstable training — the deployed production model powering the live dashboard.</p>
+    </a>
+  </div>
+
+  <div class="services-grid-bottom fade-up">
+    <a class="service-card" href="#">
+      <div class="service-card-top">
+        <span class="service-num">[ 4.0 ]</span>
+        <span class="arrow-btn arrow-btn-white">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <h3>Live Dashboard</h3>
+      <p>Upload any network CSV and watch the PPO model classify each packet — ALLOW, BLOCK, or RATE-LIMIT — in real time via a streaming Flask dashboard with analytics and confusion matrix.</p>
+    </a>
+    <a class="service-card" href="#">
+      <div class="service-card-top">
+        <span class="service-num">[ 5.0 ]</span>
+        <span class="arrow-btn arrow-btn-white">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <h3>CIC-IDS2017<br>Dataset</h3>
+      <p>Trained on real-world network intrusion data from Hugging Face — 50,000 flows, 8 packet features, 70/30 stratified split — with MinMax scaling and zero data leakage.</p>
+    </a>
+  </div>
+</section>
+
+<!-- ── SECTION 3: PRODUCT ── -->
+ <!--- change-->
+<section id="section-services-detail">
+  <div class="product-grid">
+    <div class="product-left">
+      <h2 class="title-2 fade-up">Train, evaluate, and deploy your
+        <svg class="shield-icon" viewBox="0 0 29 38" fill="none">
+      <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+    </svg>
+        firewall agent. All in one place.
+      </h2>
+      <div class="fade-up" style="margin-top:4rem">
+        <a href="#contact" class="btn-white">
+          <span>Launch Dashboard</span>
+          <span class="arrow-circle-dark">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="product-right fade-up">
+      <div class="product-label">[ OUR SERVICES ]</div>
+      <p>The AI Adaptive Firewall continuously monitors incoming network flows, enriches each packet with 8 handcrafted features, and lets the trained PPO agent decide in milliseconds — ALLOW, BLOCK, or RATE-LIMIT — with full analytics and model intelligence on every decision.</p>
+    </div>
+  </div>
+
+  <div class="video-wrapper fade-up" style="margin-top:6rem;position:relative">
+    <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:40rem;z-index:2;pointer-events:none">
+      <img src="/static/assets/preloader-light.avif" style="width:100%;opacity:.5" alt="">
+    </div>
+    <video controls controlslist="nodownload" playsinline poster="uploads/her.jpg" style="width:100%;border-radius:2.2rem">
+      <source src="https://dotdna.io/uploads/VIDEO_2024_10_29_08_46_20_c8d56e00d1.mp4" type="video/mp4">
+    </video>
+    <div style="position:absolute;bottom:-4rem;left:50%;transform:translateX(-50%);width:40rem;z-index:2;pointer-events:none">
+      <img src="/static/assets/preloader-light.avif" style="width:100%;opacity:.4;transform:rotate(180deg)" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 4: ABOUT ── -->
+<section id="section-about">
+  <img src="/static/img/img-11.png" class="about-bg" alt="">
+
+  <h2 class="title-2 fade-up">We built
+    <svg class="shield-icon" viewBox="0 0 29 38" fill="none">
+      <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+    </svg>
+    an AI-powered intrusion detection system
+  </h2>
+  <p class="about-sub fade-up">The AI Adaptive Firewall is a research-grade adaptive firewall that pits three reinforcement learning algorithms — Q-Learning, DQN, and PPO — against real network intrusion data, giving you a transparent view of how each model learns to protect your infrastructure.</p>
+
+  <div class="about-cards">
+    <div class="about-card fade-up">
+      <div class="about-card-num">[ 01 ]</div>
+      <h3>Trained on real data</h3>
+      <p>Built on the CIC-IDS2017 benchmark dataset — 50,000 real network flows spanning benign traffic and 14 attack types including DDoS, port scans, and web attacks, downloaded directly from Hugging Face.</p>
+    </div>
+    <div class="about-card fade-up">
+      <div class="about-card-num">[ 02 ]</div>
+      <h3>Three algorithms, one environment</h3>
+      <p>Q-Learning, DQN, and PPO all share the same FirewallEnv — making results directly comparable. Watch each algorithm improve episode by episode as epsilon decays and the policy converges toward optimal packet decisions.</p>
+    </div>
+    <div class="about-card fade-up">
+      <div class="about-card-num">[ 03 ]</div>
+      <h3>Production-ready pipeline</h3>
+      <p>From raw CSV upload to live streaming predictions — the trained PPO model runs deterministically on every row, reporting accuracy, ROC-AUC, confusion matrix, and action distribution in the Intelligence dashboard.</p>
+    </div>
+  </div>
+
+  <img src="/static/assets/bg.BL3vJeCp.avif" class="about-form-bg" alt="">
+</section>
+
+<!-- ── SECTION 5: CONTACT ── -->
+<section id="section-contact">
+  <canvas id="contact-canvas"></canvas>
+  <div class="contact-inner">
+    <h2 class="fade-up">Run the Firewall Today
+      <svg class="shield-icon" viewBox="0 0 29 38" fill="none">
+      <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+    </svg>
+    </h2>
+    <p class="fade-up">Train the models, upload your traffic CSV, and watch<br>the AI firewall classify every packet in real time.</p>
+    <div class="fade-up">
+      <a href="/dashboard" class="btn-white">
+        <span>Open Dashboard</span>
+        <span class="arrow-circle-dark">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <h2>AI Adaptive<br><i>Firewall —<br>reinforcement
+        <svg class="shield-icon" viewBox="0 0 29 38" fill="none">
+      <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+    </svg>
+        learning</i>
+      </h2>
+    </div>
+    <div class="footer-right">
+      <div class="footer-links-col">
+        <h6>[ algorithms ]</h6>
+        <ul>
+          <li><a href="/algorithms#qlearning">Q-Learning</a></li>
+          <li><a href="/algorithms#dqn">Deep Q-Network (DQN)</a></li>
+          <li><a href="/algorithms#ppo">PPO</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h6>[ explore ]</h6>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#section-services-detail">Services</a></li>
+        </ul>
+        <br>
+        <h6>[ connect ]</h6>
+        <ul>
+          <li><a href="#">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Copyright 2025 AI Adaptive Firewall.</span>
+    <span>All rights reserved.</span>
+  </div>
+</footer>
+
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav">
+  <a href="/" class="nav-item active">Home</a>
+  <div class="nav-dropdown">
+    <div class="nav-dropdown-toggle">
+      Algorithms
+       <svg class="shield-icon" viewBox="0 0 29 38" fill="none">
+      <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+    </svg>
+    </div>
+    <div class="nav-dropdown-menu">
+      <a href="/algorithms#qlearning">Q-Learning</a>
+      <a href="/algorithms#dqn">Deep Q-Network (DQN)</a>
+      <a href="/algorithms#ppo">PPO</a>
+    </div>
+  </div>
+  <a href="#section-services-detail" class="nav-item">Services</a>
+  <a href="#section-about" class="nav-item">About</a>
+</nav>
+
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script src="/static/js/index.js"></script>
+</body>
+</html>

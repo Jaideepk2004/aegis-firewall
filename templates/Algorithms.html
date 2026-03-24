@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algorithms — AI Adaptive Firewall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Neue+Montreal:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/algorithms.css">
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="pl">
+  <div class="pl-logo"><img src="/static/final_logo.png" alt="AI Adaptive Firewall"></div>
+  <div class="pl-wrap">
+    <div class="pl-row"><span>[ Loading... ]</span><span>[ <span id="plp">0</span>% ]</span></div>
+    <div class="pl-track"><div class="pl-fill" id="plf"></div></div>
+  </div>
+</div>
+
+<!-- Fixed BG Canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- HEADER -->
+<header>
+  <a href="/" class="logo">
+    <img src="/static/final_logo.png" alt="AI Adaptive Firewall">
+  </a>
+  <a href="/" class="btn-contact">
+    <span>Back to Home</span>
+    <span class="arrow-circle">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 13L13 3M13 3H6M13 3v7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+  </a>
+</header>
+
+<main>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-label">[ <span>AI Adaptive Firewall</span> ] — Reinforcement Learning Algorithms</div>
+  <h1 class="fade-up">The three minds<br>behind the Firewall<span style="color:var(--green)">.</span></h1>
+  <p class="page-hero-sub fade-up">From a simple lookup table to a full policy gradient network — every algorithm shares the same environment, the same reward structure, and the same goal: learn to protect the network.</p>
+</section>
+
+<!-- FLOW: shared environment -->
+<div class="algo-flow fade-up" style="padding-top:0">
+  <div class="flow-line">
+    <div class="flow-step">
+      <h4>CIC-IDS2017</h4>
+      <p>50k real network flows<br>from Hugging Face</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <h4>data_loader.py</h4>
+      <p>8 features · MinMax scale<br>70/30 stratified split</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="border-color:rgba(91,196,1,0.25);">
+      <h4 style="color:var(--green)">FirewallEnv</h4>
+      <p>Shared Gymnasium env<br>for all 3 algorithms</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <h4>Actions</h4>
+      <p>ALLOW · BLOCK<br>RATE-LIMIT</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <h4>Rewards</h4>
+      <p>+2 correct · −3 miss<br>−1 rate-limit</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     ALGORITHM 1 — Q-LEARNING
+══════════════════════════════════════ -->
+<section class="algo-section" id="qlearning">
+  <div class="algo-header fade-up">
+    <div>
+      <div class="algo-num">[ Algorithm 01 ]</div>
+      <div class="algo-tag">Tabular · qlearning.py</div>
+      <h2 class="title-2">Q-Learning</h2>
+    </div>
+    <div>
+      <p class="algo-header-desc">The foundation of the AI Adaptive Firewall. Q-Learning builds a lookup table mapping every (state, action) pair to an expected future reward. It's the simplest RL algorithm — and the clearest way to understand how the agent learns to classify packets.</p>
+    </div>
+  </div>
+
+  <div class="algo-formula fade-up">
+    <span class="formula-label">Bellman Update Equation</span>
+    Q(s, a)  ←  Q(s, a)  +  <span class="hl">α</span>  ×  [ r  +  <span class="hl">γ</span> · max<sub>a'</sub> Q(s', a')  −  Q(s, a) ]
+    <br>
+    <span style="color:rgba(246,246,246,0.35)">
+    α = learning rate (0.10)   |   γ = discount factor (0.90)   |   ε = epsilon-greedy (1.0 → 0.05)
+    </span>
+  </div>
+
+  <div class="algo-cards fade-up">
+    <div class="algo-card">
+      <div class="algo-card-num">[ 01 ]</div>
+      <h3>What it is</h3>
+      <p>Q-Learning is a tabular, model-free RL algorithm. It stores Q-values in a Python dictionary keyed by a discretised state tuple. Each entry holds three floats — one Q-value per action (ALLOW, BLOCK, RATE-LIMIT). No neural network, no function approximation.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">[ 02 ]</div>
+      <h3>How it works in the Firewall</h3> (10 bins per feature) creating a discrete state key. At every step the agent picks the highest Q-value action, observes the reward from FirewallEnv, then updates that Q-value using the Bellman equation. Epsilon decays from 1.0 → 0.05 over 50 episodes.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">[ 03 ]</div>
+      <h3>Its limitation</h3>
+      <p>With 8 features × 10 bins = up to 10⁸ possible state keys, the Q-table only learns states it actually visits and cannot generalise to nearby but unseen states. This is exactly what motivated the move to DQN — replace the table with a neural network that interpolates between states.</p>
+    </div>
+  </div>
+
+  <h6 class="title-6 fade-up">[ Training details ]</h6>
+  <div class="algo-cards fade-up" style="grid-template-columns:repeat(4,1fr)">
+    <div class="algo-card">
+      <div class="algo-card-num">Episodes</div>
+      <h3>50</h3>
+      <p>Full passes through the 35,000-row training set.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Learning rate α</div>
+      <h3>0.10</h3>
+      <p>Controls how fast Q-values shift toward the TD target.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Discount γ</div>
+      <h3>0.90</h3>
+      <p>Future rewards are worth 90% of immediate rewards.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Output</div>
+      <h3>qlearning_rewards.json</h3>
+      <p>Episode reward log displayed in the Intelligence dashboard.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     ALGORITHM 2 — DQN
+══════════════════════════════════════ -->
+<section class="algo-section" id="dqn">
+  <div class="algo-header fade-up">
+    <div>
+      <div class="algo-num">[ Algorithm 02 ]</div>
+      <div class="algo-tag">Neural Network · dqn.py</div>
+      <h2 class="title-2">Deep Q-Network</h2>
+    </div>
+    <div>
+      <p class="algo-header-desc">DQN replaces the Q-table with a neural network. Instead of storing millions of discrete states, a single network takes any 8-feature packet vector as input and outputs one Q-value per action — continuous states, no discretisation needed.</p>
+    </div>
+  </div>
+
+  <div class="algo-formula fade-up">
+    <span class="formula-label">DQN Loss (Mean Squared Error)</span>
+    L  =  MSE(  <span class="hl">Q_online</span>(s, a),    r  +  γ · max<sub>a'</sub> <span class="hl">Q_target</span>(s', a')  )
+    <br>
+    <span style="color:rgba(246,246,246,0.35)">
+    Q_online → updated every step   |   Q_target → frozen copy, synced every 500 steps
+    </span>
+  </div>
+
+  <div class="algo-cards fade-up">
+    <div class="algo-card">
+      <div class="algo-card-num">[ 01 ]</div>
+      <h3>What it is</h3>
+      <p>DQN (DeepMind, 2013–2015) introduces two key innovations over Q-Learning: experience replay (store transitions, sample random mini-batches to break temporal correlation) and a frozen target network (stable TD targets stop the loss from chasing a moving goal).</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">[ 02 ]</div>
+      <h3>How it works in the Firewall</h3>
+      <p>The QNetwork (8 → 128 → 64 → 3) takes a scaled packet feature vector and outputs Q-values for ALLOW, BLOCK, and RATE-LIMIT. Transitions are pushed to a 10,000-slot ReplayBuffer. Every step, a 64-sample mini-batch is drawn, the MSE loss is computed against the frozen target net, and gradients are clipped at norm 1.0 before the Adam step.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">[ 03 ]</div>
+      <h3>Why it bridges to PPO</h3>
+      <p>DQN still outputs Q-values — it derives the policy implicitly by taking argmax. PPO removes Q-values entirely and learns action probabilities directly. DQN is the conceptual bridge: it proves neural networks can approximate RL, while PPO improves training stability with clipped policy updates.</p>
+    </div>
+  </div>
+
+  <h6 class="title-6 fade-up">[ Network architecture ]</h6>
+  <div class="algo-formula fade-up" style="font-size:1.4rem">
+    <span class="formula-label">QNetwork — fully connected</span>
+    Input (8 floats)  →  Linear(8, 128)  →  <span class="hl">ReLU</span>  →  Linear(128, 64)  →  <span class="hl">ReLU</span>  →  Linear(64, 3)
+    <br>
+    <span style="color:rgba(246,246,246,0.35)">
+    Output: [Q(s, ALLOW),  Q(s, BLOCK),  Q(s, RATE-LIMIT)]   — agent picks argmax
+    </span>
+  </div>
+
+  <div class="algo-cards fade-up" style="grid-template-columns:repeat(4,1fr)">
+    <div class="algo-card">
+      <div class="algo-card-num">Episodes</div>
+      <h3>30</h3>
+      <p>Each episode = one full pass through X_train.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Replay buffer</div>
+      <h3>10,000</h3>
+      <p>Max transitions stored. Oldest evicted when full.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Batch size</div>
+      <h3>64</h3>
+      <p>Random mini-batch drawn per training step.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Output</div>
+      <h3>dqn_firewall.pt</h3>
+      <p>Saved PyTorch weights + dqn_rewards.json log.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     ALGORITHM 3 — PPO
+══════════════════════════════════════ -->
+<section class="algo-section" id="ppo">
+  <div class="algo-header fade-up">
+    <div>
+      <div class="algo-num">[ Algorithm 03 — Deployed ]</div>
+      <div class="algo-tag">Policy Gradient · train_ppo.py</div>
+      <h2 class="title-2">Proximal Policy<br>Optimization</h2>
+    </div>
+    <div>
+      <p class="algo-header-desc">PPO is a fundamentally different approach — instead of estimating Q-values, it directly learns a policy: a probability distribution over actions. Clipped updates keep each training step inside a safe "trust region", making it the most stable and best-performing algorithm in the AI Adaptive Firewall.</p>
+    </div>
+  </div>
+
+  <div class="algo-formula fade-up">
+    <span class="formula-label">PPO Clipped Objective</span>
+    L<sub>CLIP</sub>  =  E[  min(  ratio · <span class="hl">A</span>,   clip(ratio, 1−ε, 1+ε) · <span class="hl">A</span>  )  ]
+    <br>
+    ratio  =  π<sub>new</sub>(a|s)  /  π<sub>old</sub>(a|s)     |     <span class="hl">A</span> = advantage = Q(s,a) − V(s)
+    <br>
+    <span style="color:rgba(246,246,246,0.35)">
+    clip_range = 0.20   |   The clip prevents any single update from changing the policy too drastically
+    </span>
+  </div>
+
+  <div class="algo-cards fade-up">
+    <div class="algo-card">
+      <div class="algo-card-num">[ 01 ]</div>
+      <h3>What it is</h3>
+      <p>PPO (OpenAI, 2017) is an on-policy actor-critic algorithm. It maintains two networks: an actor π(a|s) that outputs action probabilities, and a critic V(s) that estimates expected return. The clipped surrogate objective prevents the policy from making catastrophically large jumps in any single update step.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">[ 02 ]</div>
+      <h3>How it works in the Firewall</h3>
+      <p>The AI Adaptive Firewall trains PPO in 10 phases of 20,000 timesteps each (200,000 total) using Stable-Baselines3's MlpPolicy. After each phase the policy is evaluated deterministically on 5,000 steps and the reward is logged. The final model is saved as adaptive_firewall_ppo.zip and loaded by the Flask dashboard at startup.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">[ 03 ]</div>
+      <h3>Why it's the deployed model</h3>
+      <p>PPO directly outputs action probabilities — no argmax over Q-values needed. On-policy learning means the agent always trains on its own recent experience, well-suited to the Firewall's sequential packet stream. Its stability and higher accuracy over Q-Learning and DQN made it the production choice for the Flask dashboard.</p>
+    </div>
+  </div>
+
+  <h6 class="title-6 fade-up">[ Training configuration ]</h6>
+  <div class="algo-cards fade-up" style="grid-template-columns:repeat(4,1fr)">
+    <div class="algo-card">
+      <div class="algo-card-num">Total timesteps</div>
+      <h3>200,000</h3>
+      <p>10 phases × 20,000 steps per phase.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Batch size</div>
+      <h3>256</h3>
+      <p>Mini-batch size for PPO gradient updates.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Clip range ε</div>
+      <h3>0.20</h3>
+      <p>Max ratio deviation allowed per update step.</p>
+    </div>
+    <div class="algo-card">
+      <div class="algo-card-num">Output</div>
+      <h3>adaptive_firewall_ppo.zip</h3>
+      <p>Loaded by app.py · powers the live dashboard.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     ALGORITHM COMPARISON
+══════════════════════════════════════ -->
+<section class="algo-comparison">
+  <h6 class="title-6 fade-up">[ Side by side ]</h6>
+  <h2 class="title-2 fade-up">Algorithm comparison</h2>
+  <div class="comparison-grid fade-up">
+
+    <div class="cmp-card">
+      <div class="cmp-card-label">[ 01 ]</div>
+      <h3>Q-Learning</h3>
+      <div class="cmp-row"><span class="cmp-row-label">Approach</span><span class="cmp-row-val">Tabular lookup</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">State space</span><span class="cmp-row-val">Discretised</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Generalisation</span><span class="cmp-row-val">None — visited states only</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Exploration</span><span class="cmp-row-val">ε-greedy</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Output</span><span class="cmp-row-val">Q-value table</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Episodes</span><span class="cmp-row-val">50</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Role in Firewall</span><span class="cmp-row-val">Educational baseline</span></div>
+    </div>
+
+    <div class="cmp-card">
+      <div class="cmp-card-label">[ 02 ]</div>
+      <h3>Deep Q-Network</h3>
+      <div class="cmp-row"><span class="cmp-row-label">Approach</span><span class="cmp-row-val">Neural Q-function</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">State space</span><span class="cmp-row-val">Continuous</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Generalisation</span><span class="cmp-row-val">Interpolates unseen states</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Exploration</span><span class="cmp-row-val">ε-greedy + replay</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Output</span><span class="cmp-row-val">dqn_firewall.pt</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Episodes</span><span class="cmp-row-val">30</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Role in Firewall</span><span class="cmp-row-val">Educational bridge</span></div>
+    </div>
+
+    <div class="cmp-card highlighted">
+      <div class="cmp-deployed-badge">Deployed</div>
+      <div class="cmp-card-label">[ 03 ]</div>
+      <h3>PPO</h3>
+      <div class="cmp-row"><span class="cmp-row-label">Approach</span><span class="cmp-row-val green">Policy gradient</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">State space</span><span class="cmp-row-val">Continuous</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Generalisation</span><span class="cmp-row-val green">Best — policy network</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Exploration</span><span class="cmp-row-val">Stochastic policy</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Output</span><span class="cmp-row-val green">adaptive_firewall_ppo.zip</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Timesteps</span><span class="cmp-row-val">200,000</span></div>
+      <div class="cmp-row"><span class="cmp-row-label">Role in Firewall</span><span class="cmp-row-val green">Production dashboard</span></div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <h2>AI Adaptive<br><i>Firewall —<br>reinforcement
+        <svg style="display:inline-block;vertical-align:middle;width:0.6em;height:0.6em" viewBox="0 0 29 38" fill="none">
+           <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+        </svg>
+        learning</i>
+      </h2>
+    </div>
+    <div class="footer-right">
+      <div class="footer-links-col">
+        <h6>[ algorithms ]</h6>
+        <ul>
+          <li><a href="/algorithms#qlearning">Q-Learning</a></li>
+          <li><a href="/algorithms#dqn">Deep Q-Network (DQN)</a></li>
+          <li><a href="/algorithms#ppo">PPO</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h6>[ explore ]</h6>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/#section-about">About</a></li>
+        </ul>
+        <br>
+        <h6>[ connect ]</h6>
+        <ul>
+          <li><a href="#">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Copyright 2025 AI Adaptive Firewall.</span>
+    <span>All rights reserved.</span>
+  </div>
+</footer>
+
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav">
+  <a href="/" class="nav-item">Home</a>
+  <div class="nav-dropdown">
+    <div class="nav-dropdown-toggle">
+      Algorithms
+        <svg style="display:inline-block;vertical-align:middle;width:0.6em;height:0.6em" viewBox="0 0 29 38" fill="none">
+         <circle cx="5.15" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="8.27" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="12.01" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="36.34" r="1.56" fill="#65DA00"/>
+      <circle cx="20.73" cy="33.23" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="30.11" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="10.14" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="13.25" cy="22.01" r="1.56" fill="white"/>
+      <circle cx="15.75" cy="18.89" r="1.56" fill="white"/>
+      <circle cx="18.86" cy="15.77" r="1.56" fill="white"/>
+      <circle cx="2.03" cy="26.99" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="23.25" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="19.51" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="15.77" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="12.03" r="1.56" fill="#65DA00"/>
+      <circle cx="2.03" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="26.97" cy="8.29" r="1.56" fill="#65DA00"/>
+      <circle cx="5.15" cy="5.18" r="1.56" fill="#65DA00"/>
+      <circle cx="8.89" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="12.63" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="16.37" cy="2.4" r="1.56" fill="#65DA00"/>
+      <circle cx="20.11" cy="3.31" r="1.56" fill="#65DA00"/>
+      <circle cx="23.85" cy="5.18" r="1.56" fill="#65DA00"/>
+      </svg>
+    </div>
+    <div class="nav-dropdown-menu">
+      <a href="/algorithms#qlearning" class="scroll-to" data-target="qlearning">Q-Learning</a>
+      <a href="/algorithms#dqn" class="scroll-to" data-target="dqn">Deep Q-Network (DQN)</a>
+      <a href="/algorithms#ppo" class="scroll-to" data-target="ppo">PPO</a>
+    </div>
+  </div>
+  <a href="/#section-services-detail" class="nav-item">Services</a>
+  <a href="/#section-about" class="nav-item">About</a>
+</nav>
+
+<!-- THREE.JS + GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script src="/static/js/algorithms.js"></script>
+</body>
+</html>

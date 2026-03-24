@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Adaptive Firewall — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Neue+Montreal:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<header class="topbar">
+  <div class="logo">
+    <img src="/static/final_logo.png" alt="AI Adaptive Firewall">
+  </div>
+  <nav class="nav">
+    <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+    <button class="nav-btn"        data-page="analytics">Analytics</button>
+    <button class="nav-btn"        data-page="protection">Protection</button>
+    <button class="nav-btn"        data-page="intelligence">Model Intelligence</button>
+    <button class="nav-btn"        data-page="admin">Admin</button>
+  </nav>
+  <div class="topbar-right">
+    <div id="fw-pill" class="fw-pill off">
+      <div class="fw-dot"></div>
+      <span id="fw-pill-txt">OFFLINE</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section id="page-dashboard" class="page active">
+  <div id="model-warn" class="model-banner hidden">
+    <div class="model-banner-icon">⚠</div>
+    <div>
+      <h3>PPO Model Not Found</h3>
+      <p>The trained model <code>adaptive_firewall_ppo.zip</code> was not found.<br>
+      Run: <code>python data_loader.py</code> → <code>python train_ppo.py</code><br>
+      Then restart the Flask server.</p>
+    </div>
+  </div>
+  <div id="alert-box"></div>
+  <div class="steps mb">
+    <div class="step act" id="step1"><div class="step-n">1</div><div class="step-lbl">Upload CSV</div></div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step" id="step2"><div class="step-n">2</div><div class="step-lbl">Run Firewall</div></div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step" id="step3"><div class="step-n">3</div><div class="step-lbl">View Results</div></div>
+  </div>
+  <div class="g21 mb">
+    <div class="panel">
+      <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Upload Dataset CSV</span></div>
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="file-input" accept=".csv">
+        <div class="upload-icon">🗂</div>
+        <div class="upload-title">Drop CSV file here</div>
+        <div class="upload-sub">Upload any network traffic CSV for the trained PPO model to analyse.<br>Trained on CIC-IDS2017. Compatible feature columns auto-detected.<br>Files up to 500 MB — large files sampled to 100K rows automatically.</div>
+      </div>
+      <div id="upload-prog-wrap" class="hidden" style="margin-top:1.2rem">
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.6rem">
+          <span style="font-size:1.1rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase">Uploading…</span>
+          <span id="upload-pct" style="font-size:1.1rem;color:var(--text)">0%</span>
+        </div>
+        <div class="prog-wrap"><div class="prog-bar" id="upload-bar"></div></div>
+      </div>
+    </div>
+    <div class="panel" id="csv-info-panel">
+      <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Dataset Info</span></div>
+      <div id="csv-empty" style="color:var(--muted);font-size:1.3rem;text-align:center;padding:3rem 0">No CSV loaded yet</div>
+      <div id="csv-content" class="hidden">
+        <div class="g3" id="csv-stats-grid" style="margin-bottom:1.4rem"></div>
+        <div id="csv-features-wrap"></div>
+        <div id="csv-attacks-wrap" style="margin-top:1.4rem"></div>
+      </div>
+    </div>
+  </div>
+  <div class="g4 mb">
+    <div class="stat jade"><div class="stat-label">Total Analysed</div><div class="stat-val" id="s-total">0</div></div>
+    <div class="stat jade"><div class="stat-label">Allowed</div><div class="stat-val" id="s-allow">0</div></div>
+    <div class="stat blood"><div class="stat-label">Blocked</div><div class="stat-val" id="s-block">0</div></div>
+    <div class="stat amber"><div class="stat-label">Rate-Limited</div><div class="stat-val" id="s-rl">0</div></div>
+  </div>
+  <div class="panel">
+    <div class="ph" style="justify-content:space-between;margin-bottom:1.4rem">
+      <span style="display:flex;align-items:center;gap:1rem"><span class="ph-dot"></span><span style="color:var(--text)">Live Packet Analysis</span></span>
+      <div style="display:flex;gap:1rem">
+        <button class="btn btn-jade"  id="btn-start" disabled onclick="fwStart()">▶ Start</button>
+        <button class="btn btn-blood" id="btn-stop"  disabled onclick="fwStop()">■ Stop</button>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Time</th><th>Dst Port</th><th>Flow Dur (ms)</th><th>Fwd Pkts</th><th>Bwd Pkts</th><th>True Label</th><th>Confidence</th><th>Decision</th></tr></thead>
+        <tbody id="pkt-tbody"><tr><td colspan="9" style="text-align:center;color:var(--muted);padding:4rem">Upload a CSV and press Start to begin analysis</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="page-analytics" class="page">
+  <div class="g3 mb">
+    <div class="panel"><div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Traffic Split</span></div><div class="cht"><canvas id="pie-chart"></canvas></div></div>
+    <div class="panel"><div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Top Attack Types</span></div><div class="cht"><canvas id="atk-bar-chart"></canvas></div></div>
+    <div class="panel">
+      <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Attack Rate</span></div>
+      <div class="gauge">
+        <div class="gauge-num" id="atk-rate-num">0%</div>
+        <div class="gauge-lbl">of traffic is attacks</div>
+        <div style="margin-top:2rem"><div class="prog-wrap" style="height:6px"><div class="prog-bar" id="atk-rate-bar" style="background:linear-gradient(90deg,var(--green),var(--amber),var(--red))"></div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel"><div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Attacks Over Time (per minute)</span></div><div class="cht"><canvas id="timeline-chart" style="max-height:19rem"></canvas></div></div>
+</section>
+
+<section id="page-protection" class="page">
+  <div class="panel mb"><div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">CPU Utilisation — Protected vs Unprotected</span></div><div class="cht"><canvas id="cpu-chart" style="max-height:19rem"></canvas></div></div>
+  <div class="g2">
+    <div class="panel"><div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Memory — Protected vs Unprotected</span></div><div class="cht"><canvas id="mem-chart" style="max-height:19rem"></canvas></div></div>
+    <div class="panel"><div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Attack Load vs System Latency</span></div><div class="cht"><canvas id="lat-chart" style="max-height:19rem"></canvas></div></div>
+  </div>
+</section>
+
+<section id="page-intelligence" class="page">
+  <div class="g3 mb">
+    <div class="panel" style="border-color:rgba(91,196,1,0.3)">
+      <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Algorithm 1 — Q-Learning</span></div>
+      <div style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem">Tabular · lookup table</div>
+      <div class="mrow"><span class="mrow-lbl">Type</span><span style="font-size:1.4rem;color:var(--text)">Table-Based RL</span></div>
+      <div class="mrow"><span class="mrow-lbl">State Space</span><span style="font-size:1.4rem;color:var(--muted)">Discretised</span></div>
+      <div class="mrow"><span class="mrow-lbl">Generalises</span><span style="font-size:1.4rem;color:var(--red)">No</span></div>
+      <div class="mrow"><span class="mrow-lbl">File</span><span style="font-size:1.3rem;color:var(--text)">qlearning.py</span></div>
+      <div class="mrow" style="border:none"><span class="mrow-lbl">Best Episode</span><span class="mrow-val" id="ql-best-reward">—</span></div>
+      <div style="margin-top:1.6rem;padding:1.2rem 1.6rem;background:rgba(91,196,1,0.05);border:1px solid rgba(91,196,1,0.18);border-radius:1.2rem">
+        <div style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);margin-bottom:0.8rem">Bellman Update</div>
+        <div style="font-size:1.2rem;color:var(--muted);line-height:1.8;font-family:monospace">Q(s,a) ← Q(s,a) +<br>&nbsp;&nbsp;α [r + γ·max Q(s',a') − Q(s,a)]</div>
+      </div>
+    </div>
+    <div class="panel" style="border-color:rgba(91,196,1,0.3)">
+      <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Algorithm 2 — Deep Q-Network</span></div>
+      <div style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem">Neural net · replay buffer</div>
+      <div class="mrow"><span class="mrow-lbl">Type</span><span style="font-size:1.4rem;color:var(--text)">Neural Q-Learning</span></div>
+      <div class="mrow"><span class="mrow-lbl">State Space</span><span style="font-size:1.4rem;color:var(--muted)">Continuous</span></div>
+      <div class="mrow"><span class="mrow-lbl">Generalises</span><span style="font-size:1.4rem;color:var(--text)">Yes</span></div>
+      <div class="mrow"><span class="mrow-lbl">File</span><span style="font-size:1.3rem;color:var(--text)">dqn.py</span></div>
+      <div class="mrow" style="border:none"><span class="mrow-lbl">Best Episode</span><span class="mrow-val" id="dqn-best-reward">—</span></div>
+      <div style="margin-top:1.6rem;padding:1.2rem 1.6rem;background:rgba(91,196,1,0.05);border:1px solid rgba(91,196,1,0.18);border-radius:1.2rem">
+        <div style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);margin-bottom:0.8rem">Architecture</div>
+        <div style="font-size:1.2rem;color:var(--muted);line-height:1.8;font-family:monospace">8 → 128 → 64 → 3<br>+ Replay Buffer (10K)<br>+ Target Network</div>
+      </div>
+    </div>
+    <div class="panel" style="border-color:rgba(91,196,1,0.3)">
+      <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Algorithm 3 — PPO</span><span style="margin-left:auto;font-size:1rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(91,196,1,0.1);border:1px solid rgba(91,196,1,0.3);color:var(--text);padding:0.3rem 0.8rem;border-radius:10rem">Deployed</span></div>
+      <div style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1.6rem">Policy gradient · production</div>
+      <div class="mrow"><span class="mrow-lbl">Type</span><span style="font-size:1.4rem;color:var(--text)">Policy Gradient</span></div>
+      <div class="mrow"><span class="mrow-lbl">State Space</span><span style="font-size:1.4rem;color:var(--muted)">Continuous</span></div>
+      <div class="mrow"><span class="mrow-lbl">Generalises</span><span style="font-size:1.4rem;color:var(--text)">Yes</span></div>
+      <div class="mrow"><span class="mrow-lbl">File</span><span style="font-size:1.3rem;color:var(--text)">train_ppo.py</span></div>
+      <div class="mrow" style="border:none"><span class="mrow-lbl">Best Phase</span><span class="mrow-val" id="ppo-best-reward">—</span></div>
+      <div style="margin-top:1.6rem;padding:1.2rem 1.6rem;background:rgba(91,196,1,0.05);border:1px solid rgba(91,196,1,0.18);border-radius:1.2rem">
+        <div style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);margin-bottom:0.8rem">Clip Objective</div>
+        <div style="font-size:1.2rem;color:var(--muted);line-height:1.8;font-family:monospace">ratio = π_new(a|s) / π_old(a|s)<br>L = min(ratio·A, clip(ratio,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1−ε, 1+ε)·A)</div>
+      </div>
+    </div>
+  </div>
+  <div class="panel mb">
+    <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Reward Progression — All 3 Algorithms</span></div>
+    <div style="font-size:1.2rem;color:var(--muted);margin-bottom:1.6rem;letter-spacing:0.04em">Higher reward = better firewall decisions per episode / phase</div>
+    <div class="cht"><canvas id="reward-chart" style="max-height:22rem"></canvas></div>
+  </div>
+  <div class="g3 mb">
+    <div class="panel"><div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">PPO Phase-by-Phase Rewards</span></div><div class="cht"><canvas id="ppo-phase-chart" style="max-height:19rem"></canvas></div></div>
+    <div class="panel">
+      <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Live PPO Metrics</span></div>
+      <div id="metrics-empty" style="color:var(--muted);font-size:1.3rem;text-align:center;padding:3rem 0;letter-spacing:0.04em">Start firewall to compute metrics</div>
+      <div id="metrics-content" class="hidden">
+        <div class="mrow"><span class="mrow-lbl">Accuracy</span><span class="mrow-val" id="m-acc">—</span></div>
+        <div class="mrow"><span class="mrow-lbl">ROC-AUC</span><span class="mrow-val" id="m-auc">—</span></div>
+        <div class="mrow"><span class="mrow-lbl">Allow %</span><span class="mrow-val" id="m-allow">—</span></div>
+        <div class="mrow"><span class="mrow-lbl">Block %</span><span class="mrow-val" id="m-block">—</span></div>
+        <div class="mrow"><span class="mrow-lbl">Rate-Limit %</span><span class="mrow-val" id="m-rl">—</span></div>
+      </div>
+    </div>
+    <div class="panel"><div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">PPO Action Distribution</span></div><div class="cht"><canvas id="action-hist" style="max-height:19rem"></canvas></div></div>
+  </div>
+  <div class="panel">
+    <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">PPO Confusion Matrix</span></div>
+    <div id="cm-empty" style="color:var(--muted);font-size:1.3rem;text-align:center;padding:3rem 0;letter-spacing:0.04em">Available after running analysis</div>
+    <div id="cm-content" class="hidden" style="display:flex;align-items:flex-start;gap:4rem;flex-wrap:wrap;padding:1rem 0">
+      <div class="cm">
+        <div class="cm-cell cm-tp"><div class="n" id="cm-tp">—</div><div class="l">True Positive</div></div>
+        <div class="cm-cell cm-fp"><div class="n" id="cm-fp">—</div><div class="l">False Positive</div></div>
+        <div class="cm-cell cm-fn"><div class="n" id="cm-fn">—</div><div class="l">False Negative</div></div>
+        <div class="cm-cell cm-tn"><div class="n" id="cm-tn">—</div><div class="l">True Negative</div></div>
+      </div>
+      <div style="flex:1;min-width:24rem">
+        <div style="font-size:1.1rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">What each cell means</div>
+        <div class="mrow"><span class="mrow-lbl" style="color:var(--text)">TP</span><span style="font-size:1.3rem;color:var(--muted)">Attack correctly blocked by PPO</span></div>
+        <div class="mrow"><span class="mrow-lbl" style="color:var(--red)">FP</span><span style="font-size:1.3rem;color:var(--muted)">Benign traffic incorrectly blocked</span></div>
+        <div class="mrow"><span class="mrow-lbl" style="color:var(--red)">FN</span><span style="font-size:1.3rem;color:var(--muted)">Attack that slipped through (allowed)</span></div>
+        <div class="mrow" style="border:none"><span class="mrow-lbl" style="color:var(--text)">TN</span><span style="font-size:1.3rem;color:var(--muted)">Benign traffic correctly allowed</span></div>
+        <div id="cm-note" style="margin-top:1.2rem;font-size:1.2rem;color:var(--muted);line-height:1.6"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-admin" class="page">
+  <div class="g2">
+    <div class="stk">
+      <div class="panel">
+        <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Firewall Controls</span></div>
+        <div style="display:flex;gap:1rem;margin-bottom:2rem">
+          <button class="btn btn-jade"  style="flex:1" id="admin-start" onclick="fwStart()">▶ Start Analysis</button>
+          <button class="btn btn-blood" style="flex:1" id="admin-stop"  onclick="fwStop()">■ Stop</button>
+        </div>
+        <div class="toggle-row"><div class="toggle-info"><h4>Strict Mode</h4><p>Upgrades rate-limit decisions to block</p></div><label class="tgl"><input type="checkbox" id="tgl-strict" onchange="pushSettings()"><div class="tgl-track"></div></label></div>
+        <div class="toggle-row"><div class="toggle-info"><h4>Auto-Block</h4><p>Automatically enforce all block decisions</p></div><label class="tgl"><input type="checkbox" id="tgl-autoblock" checked onchange="pushSettings()"><div class="tgl-track"></div></label></div>
+        <div class="toggle-row"><div class="toggle-info"><h4>Rate-Limit Threshold</h4><p id="rl-lbl">Current: 0.50</p></div><div style="width:11rem"><input type="range" id="rl-range" min="0" max="1" step="0.05" value="0.5" oninput="document.getElementById('rl-lbl').textContent='Current: '+parseFloat(this.value).toFixed(2);pushSettings()"></div></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">Loaded Dataset</span></div>
+        <div id="admin-csv-empty" style="color:var(--muted);font-size:1.3rem">No dataset loaded. Upload from Dashboard.</div>
+        <div id="admin-csv-info" class="hidden">
+          <div class="mrow"><span class="mrow-lbl">File</span><span id="adm-file" style="font-size:1.3rem;color:var(--text)">—</span></div>
+          <div class="mrow"><span class="mrow-lbl">Rows</span><span class="mrow-val" id="adm-rows">—</span></div>
+          <div class="mrow"><span class="mrow-lbl">Features</span><span class="mrow-val" id="adm-feats">—</span></div>
+          <div class="mrow"><span class="mrow-lbl">Attack %</span><span class="mrow-val" id="adm-atk">—</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="height:fit-content">
+      <div class="ph"><span class="ph-dot"></span><span style="color:var(--text)">System Log</span></div>
+      <div class="terminal" id="sys-log">
+        <div class="tl"><span class="tl-t">[init]</span> <span class="tl-in">AI Adaptive Firewall console initialised</span></div>
+        <div class="tl"><span class="tl-t">[init]</span> <span class="tl-in">Checking for trained PPO model…</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
