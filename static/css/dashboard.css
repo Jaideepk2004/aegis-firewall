@@ -282,10 +282,129 @@ input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
 .topbar { position: sticky; top: 0; z-index: 500; }
 main    { position: relative; z-index: 1; }
 
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — existing breakpoints (kept as-is)
+   ═══════════════════════════════════════════════ */
 @media (max-width: 1200px) { .g3,.g4 { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 768px)  {
   .g2,.g3,.g4,.g21 { grid-template-columns: 1fr; }
   .topbar { padding: 0 2rem; gap: 1.5rem; }
   main { padding: 2rem; }
   .nav-btn { padding: 0.8rem 1rem; font-size: 1.3rem; }
+}
+
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — tablet (≤ 1024px) — additions
+   ═══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  html { font-size: 9px; }
+
+  .topbar { height: 6rem; padding: 0 2.4rem; gap: 2rem; }
+
+  main { padding: 2.4rem; }
+
+  /* Nav: slightly smaller buttons */
+  .nav-btn { padding: 0.8rem 1.2rem; font-size: 1.4rem; }
+
+  /* Stat cards — 2 col instead of 4 */
+  .g4 { grid-template-columns: repeat(2, 1fr); }
+
+  /* Steps bar — allow wrapping on tight widths */
+  .steps { flex-wrap: wrap; gap: 1rem; padding: 1.6rem 2rem; }
+  .step-line { min-width: 2rem; }
+
+  /* Confusion matrix — center on wider panels */
+  .cm { max-width: 20rem; }
+
+  /* Upload zone compact */
+  .upload-zone { padding: 3.5rem 2rem; }
+}
+
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — mobile (≤ 640px) — additions
+   ═══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  html { font-size: 8.5px; }
+
+  /* Topbar: stack logo + nav vertically */
+  .topbar {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 1.2rem 1.6rem;
+    gap: 1rem;
+  }
+  .logo img { height: 28px; }
+
+  /* Nav: scrollable row, hide text on very narrow */
+  .nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    width: 100%;
+    padding: 0.4rem;
+  }
+  .nav-btn { font-size: 1.2rem; padding: 0.7rem 0.9rem; }
+
+  /* fw-pill: label hidden, show dot only */
+  .fw-pill span { display: none; }
+  .fw-pill { padding: 0.6rem 1rem; }
+
+  /* topbar-right pushed to end of wrap */
+  .topbar-right { margin-left: auto; }
+
+  /* Main padding */
+  main { padding: 1.6rem; }
+
+  /* All grids → single column */
+  .g2,.g3,.g4,.g21 { grid-template-columns: 1fr; }
+
+  /* Stat values slightly smaller */
+  .stat-val { font-size: 3rem; }
+  .stat { padding: 2rem 1.8rem; }
+
+  /* Panel padding */
+  .panel { padding: 1.8rem 1.6rem; }
+
+  /* Steps — full vertical stack */
+  .steps {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.6rem;
+  }
+  .step-line {
+    width: 1px; height: 2rem;
+    margin: 0 0 0 1.4rem;
+    background: var(--border);
+  }
+
+  /* Upload zone */
+  .upload-zone { padding: 3rem 1.6rem; }
+  .upload-title { font-size: 1.4rem; }
+  .upload-sub { font-size: 1.3rem; }
+
+  /* Table — allow horizontal scroll */
+  .tbl-wrap { overflow-x: auto; }
+  table { min-width: 56rem; }
+
+  /* Gauge */
+  .gauge-num { font-size: 4rem; }
+
+  /* Confusion matrix full width */
+  .cm { max-width: 100%; }
+
+  /* Model banner stacked */
+  .model-banner { flex-direction: column; gap: 1rem; }
+
+  /* atk-name wider on small screens */
+  .atk-name { width: 12rem; }
+
+  /* icard grid compact */
+  .icard { padding: 1.2rem; }
+  .icard-val { font-size: 2rem; }
+
+  /* Buttons full width where it makes sense */
+  .btn { width: 100%; justify-content: center; display: flex; align-items: center; }
 }

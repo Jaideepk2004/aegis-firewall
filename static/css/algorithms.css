@@ -523,3 +523,110 @@ footer h2 i { font-style: italic; }
 .pl-row{display:flex;justify-content:space-between;margin-bottom:1.2rem;font-size:1rem;letter-spacing:.14em;color:rgba(255,255,255,.35)}
 .pl-track{height:1px;background:rgba(255,255,255,.1);overflow:hidden}
 .pl-fill{height:100%;transform:translateX(-100%);background:var(--green);box-shadow:0 0 10px var(--green)}
+
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — tablet (≤ 1024px)
+   ═══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  html { font-size: 9px; }
+
+  header { padding: 2rem 2.4rem; }
+
+  .page-hero { padding: 14rem 2.4rem 6rem; }
+
+  .algo-section { padding: 7rem 2.4rem; }
+  .algo-header {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    margin-bottom: 5rem;
+  }
+
+  .algo-cards { grid-template-columns: repeat(2, 1fr); }
+
+  .algo-comparison { padding: 6rem 2.4rem; }
+  .comparison-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .algo-flow { padding: 3rem 2.4rem; }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+  .footer-right { gap: 4rem; }
+  footer { padding: 6rem 2.4rem 2.4rem; }
+}
+
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — mobile (≤ 640px)
+   ═══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  html { font-size: 8px; }
+
+  /* Header */
+  header { padding: 1.6rem 2rem; }
+  .btn-contact span { display: none; }      /* hide label, keep arrow circle */
+  .btn-contact { padding: 0.8rem; gap: 0; }
+
+  /* Bottom nav — compress on small screens */
+  #bottom-nav {
+    bottom: 1.6rem;
+    padding: 0.4rem;
+    gap: 0;
+    max-width: calc(100vw - 3.2rem);
+    overflow-x: auto;
+  }
+  .nav-item {
+    padding: 1rem 1rem;
+    font-size: 1.4rem;
+    gap: 0.4rem;
+  }
+  .nav-dropdown-toggle {
+    padding: 1rem 1rem;
+    font-size: 1.4rem;
+  }
+  /* Dropdown opens upward — keep but widen to viewport */
+  .nav-dropdown-menu {
+    min-width: 180px;
+    left: 0;
+    transform: none;
+  }
+
+  /* Hero */
+  .page-hero { padding: 12rem 2rem 5rem; }
+  .page-hero-sub { font-size: 1.6rem; }
+
+  /* Algo sections */
+  .algo-section { padding: 5rem 2rem; }
+  .algo-header { margin-bottom: 4rem; }
+  .algo-header-desc { font-size: 1.5rem; }
+
+  /* Cards → single column */
+  .algo-cards { grid-template-columns: 1fr; }
+  .algo-card { padding: 2.4rem 2rem; }
+
+  /* Formula block */
+  .algo-formula { padding: 2rem 1.6rem; font-size: 1.3rem; }
+
+  /* Comparison → single column */
+  .algo-comparison { padding: 5rem 2rem; }
+  .comparison-grid { grid-template-columns: 1fr; }
+
+  /* Flow — stack vertically */
+  .algo-flow { padding: 2rem; }
+  .flow-line {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .flow-arrow {
+    transform: rotate(90deg);
+    padding: 0;
+  }
+
+  /* Footer */
+  footer { padding: 5rem 2rem 2rem; }
+  .footer-right { flex-direction: column; gap: 3rem; }
+  .footer-bottom { flex-direction: column; gap: 1.6rem; text-align: center; }
+  .footer-links-col a { font-size: 1.6rem; }
+}
