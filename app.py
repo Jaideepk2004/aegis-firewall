@@ -1,4 +1,3 @@
-
 """
 AI Adaptive Firewall Dashboard
 Flask backend that serves predictions from the pre-trained PPO model
@@ -33,7 +32,7 @@ warnings.filterwarnings("ignore")
 BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH  = os.path.join(BASE_DIR, "adaptive_firewall_ppo")
 REWARD_PATH = os.path.join(BASE_DIR, "reward_log.npy")
-UPLOAD_DIR  = os.path.join(BASE_DIR, "uploads")
+UPLOAD_DIR  = "/tmp/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # ── Feature schema (MUST match data_loader.py exactly) ────────────────
@@ -338,7 +337,11 @@ def upload_csv():
 
     fname    = secure_filename(f.filename)
     fpath    = os.path.join(UPLOAD_DIR, fname)
-    f.save(fpath)
+
+    try:
+        f.save(fpath)
+    except Exception as e:
+        return jsonify({"error": f"Could not save file: {e}"}), 500
 
     try:
         df, orig_n = read_csv_safe(fpath)
@@ -599,3 +602,6 @@ if __name__ == "__main__":
     try_load_model()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", debug=False, port=port, threaded=True, use_reloader=False)
+else:
+    # Gunicorn entry point — load model at startup
+    try_load_model()

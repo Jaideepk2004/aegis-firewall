@@ -35,7 +35,7 @@ from data_loader import X_train, y_train
 # ══════════════════════════════════════════════════════════════════════
 # HYPER-PARAMETERS
 # ══════════════════════════════════════════════════════════════════════
-EPISODES           = 70
+EPISODES           = 1
 BATCH_SIZE         = 64
 REPLAY_BUFFER      = 10_000
 LEARNING_RATE      = 1e-3
