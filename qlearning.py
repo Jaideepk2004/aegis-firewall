@@ -29,7 +29,7 @@ import pickle
 # ══════════════════════════════════════════════════════════════════════
 # HYPER-PARAMETERS
 # ══════════════════════════════════════════════════════════════════════
-EPISODES        = 1
+EPISODES        = 10
 LEARNING_RATE   = 0.10
 DISCOUNT_FACTOR = 0.90
 EPSILON_START   = 1.00
