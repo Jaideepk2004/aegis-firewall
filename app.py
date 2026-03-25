@@ -49,7 +49,7 @@ FEATURES = [
 FEATURE_COUNT = len(FEATURES)
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
-app.config["MAX_CONTENT_LENGTH"] = 500 * 1024 * 1024  # 500 MB
+app.config["MAX_CONTENT_LENGTH"] = 1000 * 1024 * 1024  # 1000 MB
 
 # ── Global state ───────────────────────────────────────────────────────
 G = {
