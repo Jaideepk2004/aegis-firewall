@@ -1,0 +1,12 @@
+
+venv/
+__pycache__/
+.cache/
+*.pkl
+*.pt
+*.npy
+*.zip
+ai-adaptive-firewall/
+.git/
+uploads/
+*.log

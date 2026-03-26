@@ -1,14 +1,33 @@
+# Use slim Python base instead of full image
 FROM python:3.10-slim
 
+# Set working directory
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+# Install only system deps needed
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY . /app
+# Copy requirements first (for caching)
+COPY requirements.txt .
 
-RUN mkdir -p /tmp/uploads
+# Install Python deps — no cache to save space
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy only necessary app files
+COPY app.py .
+COPY env.py .
+COPY data_loader.py .
+COPY dqn.py .
+COPY qlearning.py .
+COPY Procfile .
+COPY static/ ./static/
+COPY templates/ ./templates/
+
+# Don't copy these (they're huge and not needed):
+# *.pkl, *.pt, *.npy, *.zip, venv/, ai-adaptive-firewall/
 
 EXPOSE 8080
 
-CMD gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300 --keep-alive 75
+CMD ["python", "app.py"]
