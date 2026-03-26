@@ -1,31 +1,44 @@
-# Core ML & RL
+# # Core ML & RL
+# stable-baselines3[extra]>=2.0.0
+# gymnasium>=0.29.0
+# torch>=2.0.0
+
+# # Data & preprocessing
+# datasets>=2.14.0          # Hugging Face datasets (CIC-IDS2017)
+# pandas>=2.0.0
+# numpy>=1.24.0
+# scikit-learn>=1.3.0
+# joblib>=1.3.0
+
+# # Web dashboard
+# flask>=3.0.0
+# werkzeug>=3.0.0
+
+# # Utilities
+# pyarrow>=14.0.0           # fast parquet/arrow support for HF datasets
+
+# #Add gunicorn to requirements.txt
+# gunicorn>=21.2.0
+
+# #step to execute the project :--
+
+# # step 1 :- cd aegis_final 
+# # step 2:- venv\Scripts\Activate.ps1 
+# # step 3:- python data_loader.py
+# # step 4:- python qlearning.py 
+# # step 5:- python dqn.py 
+# # step 6:- python train_ppo.py                                         
+# # step 7 :- python app.py
+
 stable-baselines3[extra]>=2.0.0
 gymnasium>=0.29.0
 torch>=2.0.0
-
-# Data & preprocessing
-datasets>=2.14.0          # Hugging Face datasets (CIC-IDS2017)
+datasets>=2.14.0
 pandas>=2.0.0
 numpy>=1.24.0
 scikit-learn>=1.3.0
 joblib>=1.3.0
-
-# Web dashboard
 flask>=3.0.0
 werkzeug>=3.0.0
-
-# Utilities
-pyarrow>=14.0.0           # fast parquet/arrow support for HF datasets
-
-#Add gunicorn to requirements.txt
+pyarrow>=14.0.0
 gunicorn>=21.2.0
-
-#step to execute the project :--
-
-# step 1 :- cd aegis_final 
-# step 2:- venv\Scripts\Activate.ps1 
-# step 3:- python data_loader.py
-# step 4:- python qlearning.py 
-# step 5:- python dqn.py 
-# step 6:- python train_ppo.py                                         
-# step 7 :- python app.py

@@ -31,7 +31,7 @@ from data_loader import X_train, y_train
 # ══════════════════════════════════════════════════════════════════════
 # CONFIGURATION
 # ══════════════════════════════════════════════════════════════════════
-PHASES              = 10      # was 10 → more phases = better convergence
+PHASES              = 1     # was 10 → more phases = better convergence
 TIMESTEPS_PER_PHASE = 20_000      # steps per phase  (600K total)
 EVAL_STEPS          = 5_000       # evaluation steps per phase
 

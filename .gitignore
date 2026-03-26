@@ -1,8 +1,19 @@
-venv/
+# venv/
+# __pycache__/
+# *.pyc
+# *.pyo
+# .cache/
+# uploads/
+# .env
+# *.env
+
+
 __pycache__/
 *.pyc
 *.pyo
+venv/
+.venv/
 .cache/
 uploads/
+*.log
 .env
-*.env
