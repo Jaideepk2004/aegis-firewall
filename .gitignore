@@ -17,3 +17,8 @@ venv/
 uploads/
 *.log
 .env
+*.pkl
+*.pt
+*.npy
+*.zip
+static/*.png
